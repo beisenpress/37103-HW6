@@ -1,5 +1,5 @@
 #### 37301 Data Driven Marketing ######
-#### Homework 5 #######
+#### Homework 6 #######
 #### Author: Ben Eisenpress #########
 
 # Load libraries
@@ -48,12 +48,18 @@ table_r = aggregate(buyer ~ r_index, FUN = mean, data = tuscan_DF)
 table_f = aggregate(buyer ~ f_index, FUN = mean, data = tuscan_DF)
 table_m = aggregate(buyer ~ m_index, FUN = mean, data = tuscan_DF)
 
+write.csv(table_r, "table_r.csv")
+write.csv(table_f, "table_f.csv")
+write.csv(table_m, "table_m.csv")
+
+
 # Calculate the maximum average response rate for any quintile of recency, fequency, and moneyary value
 # Then multiply it by 1.05
 # This value wil be used for bar charts
 max_rate <- max(c(table_r$buyer,table_f$buyer,table_m$buyer))*1.05
 
 # Create a bar chart of the response rates by RFM index
+
 barchart(buyer ~ r_index, data = table_r, horizontal = FALSE, col = "plum1", ylim = c(0, max_rate), xlab = "Recency", ylab = "Response Rate")
 barchart(buyer ~ f_index, data = table_f, horizontal = FALSE, col = "plum1", ylim = c(0, max_rate), xlab = "Frequency", ylab = "Response Rate")
 barchart(buyer ~ m_index, data = table_m, horizontal = FALSE, col = "plum1", ylim = c(0, max_rate), xlab = "Monetary Value", ylab = "Response Rate")
@@ -63,8 +69,12 @@ table_rf = aggregate(buyer ~ r_index + f_index, FUN = mean, data = tuscan_DF)
 
 max_rate2 <- max(c(table_rf$buyer))*1.05
 
-barchart(buyer ~ r_index, groups = f_index, data = table_rf, horizontal = FALSE, col = brewer.pal(5, "Set2"), 
+barchart(buyer ~ r_index, groups = f_index, data = table_rf, horizontal = FALSE, col = brewer.pal(5, "Set1"), 
          ylim = c(0, max_rate2), xlab = "Groups: Recency, Bars in Each Group: Frequency", ylab = "Response Rate")
+
+#barchart(buyer ~ f_index, groups = r_index, data = table_rf, horizontal = FALSE, col = brewer.pal(5, "Set2"), 
+#         ylim = c(0, max_rate2), xlab = "Groups: Frequency, Bars in Each Group: Recency", ylab = "Response Rate")
+
 
 ########################################################
 ################## Question 4 ##########################
@@ -80,7 +90,7 @@ max_rate3 <- max(c(table_rfm$buyer))*1.05
 
 # Create a bar chart of response rates by index bucket
 barchart(buyer ~ rfm_index, data = table_rfm, horizontal = FALSE, col = "plum1", scales = list(x = list(draw = FALSE)),
-         ylim = c(0, max_rate3), xlab = "Recency", ylab = "Response Rate")
+         ylim = c(0, max_rate3), xlab = "RFM Index", ylab = "Response Rate")
 
 ########################################################
 ################## Question 5 ##########################
@@ -176,10 +186,28 @@ grid()
 
 # Each catalog costs $1
 # COGS and variable costs are 50%. Therefore, profit is 50% of each order, less catalog cost
-rfm_DF$profit <- .5 * rfm_DF$dollars - 1 * rfm_DF$n_obs
 
+# Profit for all customers
+
+# Calculate total dollars spent 
+sum(rfm_DF$dollars)
+# Calculate total catalogs mailed
+sum(rfm_DF$n_obs)
+# Calculate profit for each RFM segment
+rfm_DF$profit <- .5 * rfm_DF$dollars - 1 * rfm_DF$n_obs
+# Calcualte total profit across all segments
 total_profit <- sum(rfm_DF$profit)
 
+# Profit for customers in RFM segments with positive profit
+
+# Calculate total dollars spent in profitable RFM segments
+sum(subset(rfm_DF$dollars, rfm_DF$profit > 0))
+# Calculate total catalogs mailed in profitable RFM segmetns
+sum(subset(rfm_DF$n_obs, rfm_DF$profit > 0))
+# Calculate profit for each RFM segment
+rfm_DF$profit <- .5 * rfm_DF$dollars - 1 * rfm_DF$n_obs
+# Calcualte total profit across all segments
 rfm_profit <- sum(subset(rfm_DF$profit, rfm_DF$profit > 0))
 
+# Calcualte percent profit improvment
 profit_improvment <- rfm_profit / total_profit - 1 
