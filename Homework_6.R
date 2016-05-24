@@ -204,8 +204,6 @@ total_profit <- sum(rfm_DF$profit)
 sum(subset(rfm_DF$dollars, rfm_DF$profit > 0))
 # Calculate total catalogs mailed in profitable RFM segments
 sum(subset(rfm_DF$n_obs, rfm_DF$profit > 0))
-# Calculate profit for each RFM segment
-rfm_DF$profit <- .5 * rfm_DF$dollars - 1 * rfm_DF$n_obs
 # Calculate percent profit improvement
 rfm_profit <- sum(subset(rfm_DF$profit, rfm_DF$profit > 0))
 
