@@ -53,9 +53,9 @@ write.csv(table_f, "table_f.csv")
 write.csv(table_m, "table_m.csv")
 
 
-# Calculate the maximum average response rate for any quintile of recency, fequency, and moneyary value
+# Calculate the maximum average response rate for any quintile of recency, frequency, and monetary value
 # Then multiply it by 1.05
-# This value wil be used for bar charts
+# This value will be used for bar charts
 max_rate <- max(c(table_r$buyer,table_f$buyer,table_m$buyer))*1.05
 
 # Create a bar chart of the response rates by RFM index
@@ -85,7 +85,7 @@ tuscan_DF$rfm_index = 100*tuscan_DF$r_index + 10*tuscan_DF$f_index + tuscan_DF$m
 # Create a table of average response rates by index
 table_rfm = aggregate(buyer ~ rfm_index, FUN = mean, data = tuscan_DF)
 
-# Cacluate the maximum response rate for any individual index bucket.  This will be used for the bar chart.
+# Calculate the maximum response rate for any individual index bucket.  This will be used for the bar chart.
 max_rate3 <- max(c(table_rfm$buyer))*1.05
 
 # Create a bar chart of response rates by index bucket
@@ -135,7 +135,7 @@ rfm_DF <- rfm_DF[order(rfm_DF$response),]
 plot(rfm_DF$rank_index, rfm_DF$lift, type = "o", pch = 21, lwd = 0.4, bg = "skyblue1", xlab = "RFM Segment Rank", ylab = "Lift")
 # Add extra tick marks to the chart
 axis(side = 2, at = seq(from = 0, to = 700, by = 100))
-# Draw a horizonal line at 100
+# Draw a horizontal line at 100
 abline(h = 100)
 # Add Gridlines
 grid()
@@ -145,7 +145,7 @@ grid()
 ################## Question 7 ##########################
 
 
-# Sort the data by response rate, decending
+# Sort the data by response rate, descending
 rfm_DF <- rfm_DF[order(-rfm_DF$response),]
 
 # Create a variable for the cumulative number of observations and buyers
@@ -163,7 +163,7 @@ rfm_DF$cum_mailed <- 100 * rfm_DF$cum_obs/sum(rfm_DF$n_obs)
 
 # Plot the cumulative lift
 plot(rfm_DF$cum_mailed, rfm_DF$cum_lift, type = "o", pch = 21, lwd = 0.4, bg = "skyblue1", 
-     xlab = "Cumulative Percent of Customers Targeted", ylab = "Cumulatie Lift")
+     xlab = "Cumulative Percent of Customers Targeted", ylab = "Cumulative Lift")
 # Add Gridlines
 grid()
 
@@ -175,7 +175,7 @@ rfm_DF$cum_buy_pct <- 100* rfm_DF$cum_buy / sum(rfm_DF$n_buyers)
 
 # Plot the cumulative buyers reached
 plot(rfm_DF$cum_mailed, rfm_DF$cum_buy_pct, type = "o", pch = 21, lwd = 0.4, bg = "skyblue1", 
-     xlab = "Cumulative Percent of Customers Targeted", ylab = "Cumulatie Percent of Buyers Captured")
+     xlab = "Cumulative Percent of Customers Targeted", ylab = "Cumulative Percent of Buyers Captured")
 # Add a 45 degree line
 abline(a = 0, b = 1)
 # Add Gridlines
@@ -195,19 +195,19 @@ sum(rfm_DF$dollars)
 sum(rfm_DF$n_obs)
 # Calculate profit for each RFM segment
 rfm_DF$profit <- .5 * rfm_DF$dollars - 1 * rfm_DF$n_obs
-# Calcualte total profit across all segments
+# Calculate total profit across all segments
 total_profit <- sum(rfm_DF$profit)
 
 # Profit for customers in RFM segments with positive profit
 
 # Calculate total dollars spent in profitable RFM segments
 sum(subset(rfm_DF$dollars, rfm_DF$profit > 0))
-# Calculate total catalogs mailed in profitable RFM segmetns
+# Calculate total catalogs mailed in profitable RFM segments
 sum(subset(rfm_DF$n_obs, rfm_DF$profit > 0))
 # Calculate profit for each RFM segment
 rfm_DF$profit <- .5 * rfm_DF$dollars - 1 * rfm_DF$n_obs
-# Calcualte total profit across all segments
+# Calculate percent profit improvement
 rfm_profit <- sum(subset(rfm_DF$profit, rfm_DF$profit > 0))
 
-# Calcualte percent profit improvment
+# Calculate percent profit improvment
 profit_improvment <- rfm_profit / total_profit - 1 
